@@ -35,17 +35,18 @@ public class Gestion_Commandes extends Thread{
 				this.commande = this.canalLecture.readLine();
 			} catch (IOException e) {  e.printStackTrace(); }
 			
-			if(this.commande!=null || !this.commande.equals("")) { // CONNECTE/user/
+			if(this.commande!=null || !this.commande.equals("")) {  
 
 				System.out.println("la commande est : "+ this.commande);
 				
             this.cmd = this.commande.split("/");
+            System.out.println("+++" + this.cmd[0]);
             
 			switch (this.cmd[0]) {
 			
-			case "BIENVENUE":// TODO
-				System.out.println("BIENVENUE"); 
-				new Jeux_Lab_Messages(this.jeux.I_out_message, "Connection success").start();
+			case "BIENVENUE": 
+				this.jeux.NewGrille(this.cmd[1]);
+				this.jeux.NewResults(this.cmd[2]);
 				break;
 				
 			case "CONNECTE":
@@ -53,7 +54,7 @@ public class Gestion_Commandes extends Thread{
 				break;
 
 			case "DECONNEXION": 
-				new Jeux_Lab_Messages(this.jeux.I_out_message, this.cmd[1]+"is offline ").start(); 
+				new Jeux_Lab_Messages(this.jeux.I_out_message, this.cmd[1]+" is offline ").start(); 
 				break;
 
 			case "SESSION": 
@@ -66,7 +67,7 @@ public class Gestion_Commandes extends Thread{
 				break;
 
 			case "TOUR":
-				System.out.println("TOUR"); this.jeux.NewGrille(this.cmd[1]);
+				this.jeux.NewGrille(this.cmd[1]);
 				break;
 				
 			case "MVALIDE": 
@@ -81,8 +82,22 @@ public class Gestion_Commandes extends Thread{
 				new Jeux_Lab_Messages(this.jeux.I_out_message, "Expiry of the time limit for reflection.").start();
 				break;
 				
+			case "BILANMOTS": 
+				this.jeux.NewResults(this.cmd[2]);
+				
+				break;
+				
 			case "ERREUR":// TODO
-				System.out.println("user existe");this.jeux.setVisible(false); 
+				switch (this.cmd[1]) {
+				case "userExist":
+					System.out.println("user existe");this.jeux.setVisible(false);
+					break;
+
+				default:
+					System.out.println("autre ERREUR");
+					break;
+				}
+				
 				break;
 				
 				

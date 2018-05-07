@@ -123,7 +123,7 @@ method signal_connexion client =
     method connect client = 
         if (self#already_connected client) then
             begin
-                let message = "**** " ^ client ^ " deja connecté " ^ "\n" in
+                let message = "ERREUR/userExist/\n" in
                 output_string out_chan message;
                 flush out_chan;
                 Unix.close s_descr  
@@ -139,7 +139,7 @@ method signal_connexion client =
 								List.map (fun y -> 
 					                  scores := !scores ^ y.user ^  "*" ^ (string_of_int !(y.score) ^ "*")) !clients;
 						
-                let message = "BIENVENU/" ^ (array_to_string tour#getTirage) ^ "/" ^ !scores ^ "/\n" in
+                let message = "BIENVENUE/" ^ (array_to_string tour#getTirage) ^ "/" ^ !scores ^ "/\n" in
                         output_string out_chan message;
                         flush out_chan
               

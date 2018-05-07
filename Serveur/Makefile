@@ -36,6 +36,10 @@ $(EXEC): $(OBJS)
 
 clean:
 	rm -f *.cm[iox] *~ .*~ #*#
+
+lance:
+	./a.out -port 2018 -tours 50
+
 	rm -f $(EXEC)
 	rm -f $(EXEC).opt
 

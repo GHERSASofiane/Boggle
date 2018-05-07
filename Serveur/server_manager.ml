@@ -106,7 +106,7 @@ class tour (usrs : Connexion_manager.infos list ref) nb_tour  =
 	
 	(* experation de tour *)
 	method expiration clients = 
-		Thread.delay 30.0;
+		Thread.delay 60.0;
 		print_endline ("fin de temps repartie pour le tour " ^ string_of_int !num_tour);
 		journal#write_to_journal ("<tour>\n<num_tour>" ^ string_of_int !num_tour ^ "</num_tour>\n</session>\n</journal>"); 
 		let message =  "RFIN/\n" in
