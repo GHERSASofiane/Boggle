@@ -1,0 +1,30 @@
+package Threads;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+
+import Graphique.Jeux;
+
+public class Gestion_Commandes extends Thread{
+
+	private Jeux jeux = null;
+	private DataInputStream canalLecture;
+	private String commande;
+	
+	public Gestion_Commandes(Jeux j) {
+		this.jeux = j;
+		this.canalLecture = this.jeux.getcanalLecture();
+	}
+	
+	@Override
+	public void run() {
+		while(true) {
+			
+			try {
+				this.commande = this.canalLecture.readLine();
+			} catch (IOException e) {  e.printStackTrace(); }
+			
+			System.out.println("la commande est : "+ this.commande);
+		}
+	}
+}

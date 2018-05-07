@@ -1,0 +1,18 @@
+package Threads;
+
+public class Connexion_Lab_Erreur extends Thread{
+
+	private javax.swing.JLabel I_erreur;
+	private String message;
+	
+	public Connexion_Lab_Erreur(javax.swing.JLabel I, String m) {
+		this.I_erreur = I;
+		this.message = m;
+	}
+	
+	@Override
+	public void run() {
+		 
+	}
+	
+}
