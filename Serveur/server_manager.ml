@@ -1,5 +1,6 @@
 open Server;;
 open Connexion_manager;;
+open Journal;;
 
 let users = ref [];;
 let mutex = Mutex.create ();;
@@ -75,14 +76,14 @@ let bilan clients =
 		
 
 
-class tour (usrs : Connexion_manager.infos list ref) nb_tour= 
+class tour (usrs : Connexion_manager.infos list ref) nb_tour  = 
 	object(self)
 	initializer 
 		self#setTirage ()
-
+		
 	
 	(* method debut_tour = *) 
-	
+	val journal = new journal
 	val mutable tirage = matrice
 	val mutable words_found = [""]
 
@@ -107,13 +108,21 @@ class tour (usrs : Connexion_manager.infos list ref) nb_tour=
 	method expiration clients = 
 		Thread.delay 30.0;
 		print_endline ("fin de temps repartie pour le tour " ^ string_of_int !num_tour);
+		journal#write_to_journal ("<tour>\n<num_tour>" ^ string_of_int !num_tour ^ "</num_tour>\n</session>\n</journal>"); 
 		let message =  "RFIN/\n" in
           ignore (List.map (
                       fun x -> 
                                 output_string x.outchan message;
                 								flush x.outchan;
+																
+															journal#write_to_journal ("<client>\n"^ 
+																									"<name>" ^ x.user ^ "</name>\n" ^
+																									"<score>" ^ string_of_int !(x.score) ^ "</score>\n" ^
+																									"</client>\n</session>\n</journal>")
                     ) !clients);
+										journal#write_to_journal ("</tour>\n</session>\n</journal>");
 										bilan !clients;
+										
 										num_tour := !num_tour + 1; 
 										ignore (Thread.create (fun x -> self#start_tour !num_tour)());
 		Thread.exit ()	
@@ -149,10 +158,9 @@ end;;
 
 class server_maj port n =
    object(self)
-   inherit server port n
-		
-					
-	 val mutable tour_actuel = new tour users n
+    inherit server port n
+			
+	 val mutable tour_actuel = new tour users n 
 	 
    method treat s sa =
 	 ignore( (new connexion_maj s sa true tour_actuel )#start())
