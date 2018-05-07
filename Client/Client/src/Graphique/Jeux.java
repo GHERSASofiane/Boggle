@@ -1,5 +1,7 @@
 package Graphique;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
@@ -34,13 +36,51 @@ public class Jeux extends javax.swing.JFrame {
       	canalEcriture.println("CONNEXION/"+this.username.getText()+"/"); canalEcriture.flush();
       	new Gestion_Commandes(this).start();
 
-    }
 
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				canalEcriture.println("SORT/"+username.getText()+"/\n");canalEcriture.flush();
+				super.windowClosing(e);
+			}
+		});
+    }
+	public void NewSession() {
+		MetreAZero();
+		this.I_mots.setModel(new javax.swing.AbstractListModel<String>() {
+			Vector<String> strings = new Vector<>();
+	        public int getSize() { return strings.size(); }
+	        public String getElementAt(int i) { return strings.get(i); } 
+	    }); 
+		
+	}
+	
+	public void MetreAZero() {
+    	if(this.Traj_But.size()!=0) {
+    		
+    		
+    		
+    		int taille = this.Traj_But.size()-1;
+    		for (int i = 0; i <= taille; i++) {
+    			this.Traj_But.get(i).setEnabled(true);
+			}
+    		
+    			this.Traj_But.removeAllElements();
+    		
+    		this.Traj_Mot = "";
+    		this.Traj_Traj = "";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
+	}
+	
 	public void NewGrille(String g) {
 		this.A1.setText(""+g.charAt(0));this.A2.setText(""+g.charAt(1));this.A3.setText(""+g.charAt(2));this.A4.setText(""+g.charAt(3));
 		this.B1.setText(""+g.charAt(4));this.B2.setText(""+g.charAt(5));this.B3.setText(""+g.charAt(6));this.B4.setText(""+g.charAt(7));
 		this.C1.setText(""+g.charAt(8));this.C2.setText(""+g.charAt(9));this.C3.setText(""+g.charAt(10));this.C4.setText(""+g.charAt(11));
 		this.D1.setText(""+g.charAt(12));this.D2.setText(""+g.charAt(13));this.D3.setText(""+g.charAt(14));this.D4.setText(""+g.charAt(15));
+	
+		MetreAZero();
 	}
 
 public Vector<String> mysplit(String chan, char sep) {
@@ -57,31 +97,79 @@ public Vector<String> mysplit(String chan, char sep) {
 	}
 	return res;
 }
-	
-	public void NewResults(String par) {
-		Vector<String> res = mysplit(par, '*');  
-		
-		Vector<String> strings = new Vector<>(); 
-		strings.add("Number of turns is "+res.get(0));
-		
-		for (int i = 1; i < res.size(); i+=2) {
-			strings.add(res.get(i)+"  "+res.get(i+1));
-			
-		}
-		
-		this.I_Result.setModel(new javax.swing.AbstractListModel<String>() {
-            
-            public int getSize() { return strings.size(); }
-            public String getElementAt(int i) { return strings.get(i); }
-        }); 
-	}
 
-	public void ValidationMot() {
+public void NewResults(String par) {
+	Vector<String> res = mysplit(par, '*');  
+	
+	Vector<String> strings = new Vector<>(); 
+	strings.add("Number of turns is "+res.get(0));
+	strings.add("");
+	strings.add("User | Score | Words");
+	strings.add("");
+	
+	for (int i = 1; i < res.size(); i+=2) {
+		strings.add(res.get(i)+" | "+res.get(i+1));
+		if(res.get(i).equals(this.username.getText())) {
+			this.I_in_score.setText(res.get(i+1));
+		}
+	}
+	
+	this.I_Result.setModel(new javax.swing.AbstractListModel<String>() {
+        
+        public int getSize() { return strings.size(); }
+        public String getElementAt(int i) { return strings.get(i); }
+    }); 
+	
+	MetreAZero();
+}
+
+
+public void NewResultsBil(String mots, String par) {
+	Vector<String> res = mysplit(par, '*');  
+	String[] motsj = mots.split(";");
+	
+	Vector<String> strings = new Vector<>(); 
+	strings.add("Number of turns is "+res.get(0));
+	strings.add("");
+	strings.add("User | Score | Words");
+	strings.add("");
+	
+	
+	for (int i = 1,j=0; i < res.size(); i+=2,j++) {
+		String[] tmp2 = motsj[j].split(":");
+		String aff = "";
+		if(tmp2.length==2) aff=tmp2[1];
 		
+		strings.add(res.get(i)+" | "+res.get(i+1)+" | "+ aff );		
+		
+		if(res.get(i).equals(this.username.getText())) {
+			this.I_in_score.setText(res.get(i+1));
+		}
+	}
+	
+	this.I_Result.setModel(new javax.swing.AbstractListModel<String>() {
+        
+        public int getSize() { return strings.size(); }
+        public String getElementAt(int i) { return strings.get(i); }
+    }); 
+	
+	MetreAZero();
+}
+
+	public void ValidationMot(String m) {
+		this.myMots.addElement(m);
+		
+		this.I_mots.setModel(new javax.swing.AbstractListModel<String>() {
+			Vector<String> strings = myMots;
+	        public int getSize() { return strings.size(); }
+	        public String getElementAt(int i) { return strings.get(i); } 
+	    }); 
+		
+		MetreAZero();
 	}
 
 	public void InValidationMot() {
-		
+		MetreAZero();
 	}
 
     private void initComponents() {
@@ -126,7 +214,8 @@ public Vector<String> mysplit(String chan, char sep) {
         I_Result = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
+        
+		
         panel_jeux.setBackground(new java.awt.Color(224, 187, 0));
         panel_jeux.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder("Boggle By Sofiane GHERSA __ Naim CHOULLIT "), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 14))); // NOI18N
 
@@ -472,7 +561,14 @@ public Vector<String> mysplit(String chan, char sep) {
             public String getElementAt(int i) { return strings[i]; }
         });
         jScrollPane3.setViewportView(I_Result);
-
+        
+		I_mots.setModel(new javax.swing.AbstractListModel<String>() {
+			Vector<String> strings = new Vector<>();
+	        public int getSize() { return strings.size(); }
+	        public String getElementAt(int i) { return strings.get(i); }
+	        public void addElement(String s) { strings.addElement(s); }
+	    }); 
+        jScrollPane1.setViewportView(I_mots);
 
         javax.swing.GroupLayout panel_jeuxLayout = new javax.swing.GroupLayout(panel_jeux);
         panel_jeux.setLayout(panel_jeuxLayout);
@@ -526,44 +622,143 @@ public Vector<String> mysplit(String chan, char sep) {
     }// </editor-fold>                        
 
     private void click_case_A1(java.awt.event.MouseEvent evt) {                               
-        System.out.println("interfaces.Connexion.click_case()");
-    }                              
+    	if(!this.Traj_But.contains(A1)) {
+    		
+    		this.A1.setEnabled(false);
+    		
+    		this.Traj_But.add(A1);
+    		this.Traj_Mot += this.A1.getText();
+    		this.Traj_Traj += "A1";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
+       }                              
 
     private void click_case_A3(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
-     
+    	if(!this.Traj_But.contains(A3)) {
+    		
+    		this.A3.setEnabled(false);
+    		
+    		this.Traj_But.add(A3);
+    		this.Traj_Mot += this.A3.getText();
+    		this.Traj_Traj += "A3";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
+        
     }                              
 
     private void click_case_A2(java.awt.event.MouseEvent evt) {                               
-        System.out.println("interfaces.Connexion.click_case()");
-    }                              
+    	if(!this.Traj_But.contains(A2)) {
+    		
+    		this.A2.setEnabled(false);
+    		
+    		this.Traj_But.add(A2);
+    		this.Traj_Mot += this.A2.getText();
+    		this.Traj_Traj += "A2";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
+       }                              
 
     private void click_case_A4(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
-    }                              
+    	if(!this.Traj_But.contains(A4)) {
+    		
+    		this.A4.setEnabled(false);
+    		
+    		this.Traj_But.add(A4);
+    		this.Traj_Mot += this.A4.getText();
+    		this.Traj_Traj += "A4";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
+       }                              
 
     private void click_case_B4(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
-    }                              
+    	if(!this.Traj_But.contains(B4)) {
+    		
+    		this.B4.setEnabled(false);
+    		
+    		this.Traj_But.add(B4);
+    		this.Traj_Mot += this.B4.getText();
+    		this.Traj_Traj += "B4";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
+        }                              
 
     private void click_case_B3(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
-    }                              
+    	if(!this.Traj_But.contains(B3)) {
+    		
+    		this.B3.setEnabled(false);
+    		
+    		this.Traj_But.add(B3);
+    		this.Traj_Mot += this.B3.getText();
+    		this.Traj_Traj += "B3";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
+        }                              
 
     private void click_case_B2(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
-    }                              
+    	if(!this.Traj_But.contains(B2)) {
+    		
+    		this.B2.setEnabled(false);
+    		
+    		this.Traj_But.add(B2);
+    		this.Traj_Mot += this.B2.getText();
+    		this.Traj_Traj += "B2";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
+        }                              
 
     private void click_case_B1(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
+    	if(!this.Traj_But.contains(B1)) {
+    		
+    		this.B1.setEnabled(false);
+    		
+    		this.Traj_But.add(B1);
+    		this.Traj_Mot += this.B1.getText();
+    		this.Traj_Traj += "B1";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
     }                              
 
-    private void I_check_motf_check_mot(java.awt.event.MouseEvent evt) {                                        
-        System.out.println("interfaces.Connexion.f_check_mot()");
+    private void I_check_motf_check_mot(java.awt.event.MouseEvent evt) {   
+    
+    	if(this.Traj_But.size()!=0) {
+    		
+    		this.canalEcriture.print("TROUVE/"+ this.Traj_Mot +"/"+ this.Traj_Traj +"/\n");this.canalEcriture.flush();
+    	 
+    		int taille = this.Traj_But.size()-1;
+    		for (int i = 0; i <= taille; i++) {
+    			 
+    			this.Traj_But.get(i).setEnabled(true);
+			}
+    		
+    			this.Traj_But.removeAllElements();
+    		
+    		this.Traj_Mot = "";
+    		this.Traj_Traj = "";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
     }                                       
 
     private void I_reset_motf_reset_mot(java.awt.event.MouseEvent evt) {                                        
-        System.out.println("interfaces.Connexion.f_reset_mot()");
+        
+    	if(this.Traj_But.size()!=0) {
+    		int taille = this.Traj_But.size()-1;
+    		this.Traj_But.get(taille).setEnabled(true);
+    		
+    		this.Traj_But.remove(taille);
+    		this.Traj_Mot = this.Traj_Mot.substring(0, this.Traj_Mot.length()-1);
+    		this.Traj_Traj = this.Traj_Traj.substring(0, this.Traj_Traj.length()-2);
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
     }                                       
 
     private void I_desin_trajectoryf_designer(java.awt.event.MouseEvent evt) {                                              
@@ -576,35 +771,111 @@ public Vector<String> mysplit(String chan, char sep) {
     }                                          
 
     private void click_case_C1(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
+    	if(!this.Traj_But.contains(C1)) {
+    		
+    		this.C1.setEnabled(false);
+    		
+    		this.Traj_But.add(C1);
+    		this.Traj_Mot += this.C1.getText();
+    		this.Traj_Traj += "C1";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
     }                              
 
     private void click_case_C2(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
+    	if(!this.Traj_But.contains(C2)) {
+    		
+    		this.C2.setEnabled(false);
+    		
+    		this.Traj_But.add(C2);
+    		this.Traj_Mot += this.C2.getText();
+    		this.Traj_Traj += "C2";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
     }                              
 
     private void click_case_C3(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
+    	if(!this.Traj_But.contains(C3)) {
+    		
+    		this.C3.setEnabled(false);
+    		
+    		this.Traj_But.add(C3);
+    		this.Traj_Mot += this.C3.getText();
+    		this.Traj_Traj += "C3";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
     }                              
 
     private void click_case_C4(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
+    	if(!this.Traj_But.contains(C4)) {
+    		
+    		this.C4.setEnabled(false);
+    		
+    		this.Traj_But.add(C4);
+    		this.Traj_Mot += this.C4.getText();
+    		this.Traj_Traj += "C4";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
     }                              
 
     private void click_case_D1(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
+    	if(!this.Traj_But.contains(D1)) {
+    		
+    		this.D1.setEnabled(false);
+    		
+    		this.Traj_But.add(D1);
+    		this.Traj_Mot += this.D1.getText();
+    		this.Traj_Traj += "D1";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
     }                              
 
     private void click_case_D2(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
+    	if(!this.Traj_But.contains(D2)) {
+    		
+    		this.D2.setEnabled(false);
+    		
+    		this.Traj_But.add(D2);
+    		this.Traj_Mot += this.D2.getText();
+    		this.Traj_Traj += "D2";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
     }                              
 
     private void click_case_D3(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
+        
+    	if(!this.Traj_But.contains(D3)) {
+    		
+    		this.D3.setEnabled(false);
+    		
+    		this.Traj_But.add(D3);
+    		this.Traj_Mot += this.D3.getText();
+    		this.Traj_Traj += "D3";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
+    	
     }                              
 
-    private void click_case_D4(java.awt.event.MouseEvent evt) {                               
-        // TODO add your handling code here:
+    private void click_case_D4(java.awt.event.MouseEvent evt) {  
+        
+    	if(!this.Traj_But.contains(D4)) {
+    		
+    		this.D4.setEnabled(false);
+    		
+    		this.Traj_But.add(D4);
+    		this.Traj_Mot += this.D4.getText();
+    		this.Traj_Traj += "D4";
+    		
+    		this.I_out_mot.setText(this.Traj_Mot);
+    	}
+    	
     }                              
 
              
@@ -629,7 +900,7 @@ public Vector<String> mysplit(String chan, char sep) {
     private javax.swing.JButton I_desin_trajectory;
     private javax.swing.JLabel I_in_score;
     public static javax.swing.JLabel I_in_time;
-    private javax.swing.JList<String> I_mots;
+    public javax.swing.JList<String> I_mots;
     public javax.swing.JLabel I_out_message;
     private javax.swing.JTextField I_out_mot;
     private javax.swing.JLabel I_reset_mot;
@@ -650,6 +921,13 @@ public Vector<String> mysplit(String chan, char sep) {
     
     private Socket socket = null;
     private DataInputStream canalLecture = null;
-    private PrintStream canalEcriture = null;
+    public PrintStream canalEcriture = null;
+    
+    public Vector<javax.swing.JButton> Traj_But = new Vector<>();
+    public String Traj_Traj = "";
+    public String Traj_Mot = "";
+    public Vector<String> myMots = new Vector<>();
+    public int myScor = 0;
+    
 }
 
