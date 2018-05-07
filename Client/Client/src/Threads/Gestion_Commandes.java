@@ -59,11 +59,13 @@ public class Gestion_Commandes extends Thread{
 
 			case "SESSION": 
 				new Jeux_Lab_Messages(this.jeux.I_out_message, "New Session").start();
+				this.jeux.NewSession();
 				break;
 
-			case "VAINQUEUR": // TODO
+			case "VAINQUEUR": 
 				new Jeux_Lab_Messages(this.jeux.I_out_message, "End of Session").start();
-				String bilan = this.cmd[1];System.out.println(bilan);
+				String bilan = this.cmd[1]; 
+				this.jeux.NewResults(bilan);
 				break;
 
 			case "TOUR":
@@ -71,10 +73,11 @@ public class Gestion_Commandes extends Thread{
 				break;
 				
 			case "MVALIDE": 
-				this.jeux.ValidationMot();
+				this.jeux.ValidationMot(this.cmd[1]);
 				break;
 				
 			case "MINVALIDE": 
+				new Jeux_Lab_Messages(this.jeux.I_out_message, this.cmd[1]).start();
 				this.jeux.InValidationMot();
 				break;
 				
@@ -83,7 +86,7 @@ public class Gestion_Commandes extends Thread{
 				break;
 				
 			case "BILANMOTS": 
-				this.jeux.NewResults(this.cmd[2]);
+				this.jeux.NewResultsBil(this.cmd[1], this.cmd[2]);
 				
 				break;
 				
