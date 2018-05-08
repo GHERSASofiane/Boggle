@@ -2,6 +2,7 @@ open Connexion;;
 open Global_functions;;
 
 exception Fin ;;
+let mutex = Mutex.create ();;
 
 
 (* verifier la trajectoire *)
@@ -130,15 +131,26 @@ method signal_connexion client =
           else
             begin
               (* pour la gestion de temps*)
-                (* Thread.create gestion_temps clients; *)
-                clients := !clients@[{user = client; socket = s_descr; motsproposes = ref ""; score = ref 0; outchan = out_chan}];
-                print_endline ("new Connexion from : " ^ client);
-								let scores = ((string_of_int (tour#getNumTour ())) ^ "*") ^ (scores !clients) in
-					  (* 
+                
+								if (List.length !clients > 0) then 
+									begin
+                    let users = ref "USERS/" in 
+    										List.map (fun x -> users := !users ^ x.user ^ "*") !clients;
+    										output_string out_chan (!users ^ "/\n");
+                        flush out_chan;
+								end;
+								
+								Mutex.lock mutex;
+								clients := !clients@[{user = client; socket = s_descr; motsproposes = ref ""; score = ref 0; outchan = out_chan}];
+                Mutex.unlock mutex;
+								
+								print_endline ("new Connexion from : " ^ client);
+								let scores = ref ((string_of_int (tour#getNumTour ())) ^ "*") in
+					  
 								List.map (fun y -> 
 					                  scores := !scores ^ y.user ^  "*" ^ (string_of_int !(y.score) ^ "*")) !clients;
-						*)
-                let message = "BIENVENUE/" ^ (array_to_string tour#getTirage) ^ "/" ^ scores ^ "/\n" in
+						
+                let message = "BIENVENUE/" ^ (array_to_string tour#getTirage) ^ "/" ^ !scores ^ "/\n" in
                         output_string out_chan message;
                         flush out_chan
               
@@ -224,7 +236,9 @@ method signal_connexion client =
 	method send_message_to msg user = 
 		ignore(
 		try
-				let message = "PRECEPTION/" ^ msg ^ "/" ^ user ^ "\n" and
+				let 
+				usr  = List.find (fun x -> x.socket = s_descr) !clients in
+				let message = "PRECEPTION/" ^ msg ^ "/" ^ usr.user  ^ "\n" and
 				 client = List.find (fun x -> x.user = user) !clients in
 				output_string client.outchan message;
         flush client.outchan

@@ -2,17 +2,17 @@ open Global_functions;;
 
 let string_of_month = function
   0 -> "janvier"
-| 1 -> "février"
+| 1 -> "fï¿½vrier"
 | 2 -> "mars"
 | 3 -> "avril"
 | 4 -> "mai"
 | 5 -> "juin"
 | 6 -> "juillet"
-| 7 -> "août"
+| 7 -> "aoï¿½t"
 | 8 -> "septembre"
 | 9 -> "octobre"
 | 10 -> "novembre"
-| 11 -> "décembre"
+| 11 -> "dï¿½cembre"
 | _ -> assert false (* on ne doit pas avoir une autre valeur *)
 ;;
 
@@ -33,13 +33,7 @@ let write_list_to_file l =
 
 
 let open_journal () = 	
-	let j = ref (read_file "journal.xml") in
-		let  date = Unix.gmtime(Unix.time ()) in
-		begin
-		match (List.exists (fun x -> x = "<journal>") !j) with
-		| true -> 
-					j := (List.tl (List.rev !j))@["<session><date>" ^ date_string_of_tm date]@["</date>\n"]@["</session>\n"]@["</journal>"]
-		| false -> 
-					j := !j@["<journal>"]@["\n"]@["<session><date>" ^ date_string_of_tm date]@["</date>\n"]@["</session>\n"]@["</journal>"]
-		end;
+	let j = ref (read_file "journal.xml") and date = Unix.gmtime(Unix.time ()) in
+		 let session = ["<session><date>" ^ date_string_of_tm date]@["</date>\n"]@["</session>\n"] in
+      	j := ["<journal>"]@["\n"]@session@["</journal>"];
 		write_list_to_file !j;;

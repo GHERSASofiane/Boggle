@@ -1,0 +1,13 @@
+.
+.recommenders
+.recommenders/index
+.recommenders/index/http___download_eclipse_org_recommenders_models_oxygen_
+Client
+Client/Client
+Client/Client/bin
+Client/bin
+Client/src
+Client/src/Graphique
+Client/src/Threads
+Serveur
+/usr/lib/ocaml

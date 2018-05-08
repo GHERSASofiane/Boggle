@@ -3,11 +3,9 @@ open Global_functions;;
 open Journal;;
 
 let users = ref [];;
-let mutex = Mutex.create ();;
-let cond = Condition.create ();;
 let matrice = Array.make_matrix 4 4 "";;
 let num_tour = ref 1;;
-let mutex = Mutex.create ();;
+
 
 
 (*lancer les des *)
@@ -64,7 +62,7 @@ class tour (usrs : infos list ref) nb_tour =
 	
 	(* experation de tour *)
 	method expiration clients = 
-		Thread.delay 15.0;
+		Thread.delay 120.0;
 		print_endline ("fin de temps repartie pour le tour " ^ string_of_int !num_tour);
 		let message =  "RFIN/\n" in
 		let t = ref ["\n<tour>\n<num_tour>" ^ string_of_int !num_tour ^ "</num_tour>\n"] in	
