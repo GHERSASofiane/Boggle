@@ -1,3 +1,5 @@
+open Global_functions;;
+
 let string_of_month = function
   0 -> "janvier"
 | 1 -> "février"
@@ -19,37 +21,25 @@ let date_string_of_tm tm =
     " " ^ (string_of_int (1900 + tm.Unix.tm_year))) in
 		d;;
 
+let rec write_to_file oc = function
+	| [] -> ()
+	| e::tl -> output_string oc e; flush oc; write_to_file oc tl
+	;;
+ 
+let write_list_to_file l = 
+	let jrnl =  open_out "journal.xml" in
+		write_to_file jrnl l;
+		close_out jrnl;;
 
-class journal = 
-object(self)
-initializer self#open_journal
 
-val jrnl = open_out "journal.xml"
-
-method open_journal = 
-	let date = Unix.gmtime(Unix.time ()) in
-		let j = "<journal>\n" 
-		 ^ "<session>\n<date>" ^ date_string_of_tm date ^ "</date>\n" ^ 
-		 "</session>\n"
-		 ^ "</journal>" in
-		self#write_to_journal j
-
-method write_to_journal message =
-		let pos = pos_out jrnl in
-		if pos > 0 then
-			begin
-			print_endline ("pos : " ^ string_of_int pos);
-			seek_out jrnl (pos - String.length "</session>\n</journal>");
-			output_string jrnl message;
-			flush jrnl
-			end
-			else (
-		output_string jrnl message;
-		flush jrnl
-			)
-		
-		
-		
-method close_journal () = close_out jrnl
-
-end;;
+let open_journal () = 	
+	let j = ref (read_file "journal.xml") in
+		let  date = Unix.gmtime(Unix.time ()) in
+		begin
+		match (List.exists (fun x -> x = "<journal>") !j) with
+		| true -> 
+					j := (List.tl (List.rev !j))@["<session><date>" ^ date_string_of_tm date]@["</date>\n"]@["</session>\n"]@["</journal>"]
+		| false -> 
+					j := !j@["<journal>"]@["\n"]@["<session><date>" ^ date_string_of_tm date]@["</date>\n"]@["</session>\n"]@["</journal>"]
+		end;
+		write_list_to_file !j;;

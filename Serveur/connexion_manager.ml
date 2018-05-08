@@ -1,6 +1,5 @@
 open Connexion;;
-
-type infos = {user : string; socket : Unix.file_descr; motsproposes: string ref;  score : int ref; outchan : out_channel };;
+open Global_functions;;
 
 exception Fin ;;
 
@@ -134,12 +133,12 @@ method signal_connexion client =
                 (* Thread.create gestion_temps clients; *)
                 clients := !clients@[{user = client; socket = s_descr; motsproposes = ref ""; score = ref 0; outchan = out_chan}];
                 print_endline ("new Connexion from : " ^ client);
-								let scores = ref ((string_of_int (tour#getNumTour ())) ^ "*") in
-					   
+								let scores = ((string_of_int (tour#getNumTour ())) ^ "*") ^ (scores !clients) in
+					  (* 
 								List.map (fun y -> 
 					                  scores := !scores ^ y.user ^  "*" ^ (string_of_int !(y.score) ^ "*")) !clients;
-						
-                let message = "BIENVENUE/" ^ (array_to_string tour#getTirage) ^ "/" ^ !scores ^ "/\n" in
+						*)
+                let message = "BIENVENUE/" ^ (array_to_string tour#getTirage) ^ "/" ^ scores ^ "/\n" in
                         output_string out_chan message;
                         flush out_chan
               
@@ -151,11 +150,7 @@ method signal_connexion client =
               output_string out_chan message;
               flush out_chan
 
-	(*fin d'une session *)
-    method end_session () = 
-            let message =  "VAINQUEUR/" ^ (scores !clients) ^ "\n" in
-            output_string out_chan message;
-            flush out_chan
+	
     
 	(* debut d'un nouveau tour *)
 	method nouveau_tour () = 
@@ -174,7 +169,7 @@ method signal_connexion client =
 	              begin
 									
 										if (List.exists (fun x -> mot = x) tour#getWords) then
-											reponse := "MINVALID/" ^ mot ^ "ALREADY FOUND/\n"
+											reponse := "MINVALIDE/" ^ mot ^ "ALREADY FOUND/\n"
 										else 
 									
 	                  (* verifier l'existance d'un mot dans le dictionnaire*)

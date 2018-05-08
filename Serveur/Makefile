@@ -1,6 +1,6 @@
 #export OCAMLPARAM="safe-string=0,_"
 
-SOURCES = journal.ml connexion.ml connexion_manager.ml server.ml server_manager.ml main.ml
+SOURCES = global_functions.ml journal.ml connexion.ml connexion_manager.ml tour.ml server.ml server_manager.ml main.ml
 
 EXEC = a.out
 
@@ -40,5 +40,5 @@ clean:
 	rm -f $(EXEC).opt
 
 lance:
-	./a.out -port 2018 -tours 2
+	./a.out -port 2018 -tours 5
 
