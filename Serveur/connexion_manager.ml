@@ -174,7 +174,7 @@ method signal_connexion client =
 	              begin
 									
 										if (List.exists (fun x -> mot = x) tour#getWords) then
-											reponse := "MINVALID/" ^ mot ^ "ALREADY FOUND/\n"
+											reponse := "MINVALIDE/" ^ mot ^ "ALREADY FOUND/\n"
 										else 
 									
 	                  (* verifier l'existance d'un mot dans le dictionnaire*)
