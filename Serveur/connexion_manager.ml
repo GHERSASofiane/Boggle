@@ -130,8 +130,6 @@ method signal_connexion client =
             end
           else
             begin
-              (* pour la gestion de temps*)
-                
 								if (List.length !clients > 0) then 
 									begin
                     let users = ref "USERS/" in 
@@ -164,11 +162,12 @@ method signal_connexion client =
 
 	
     
-	(* debut d'un nouveau tour *)
+	(* debut d'un nouveau tour 
 	method nouveau_tour () = 
 		let message = "TOUR/" ^ (array_to_string tirage) in
         output_string out_chan message;
         flush out_chan
+				*)
   
 	(* phase de recherche *)
   method trouve mot trajectoire =			
