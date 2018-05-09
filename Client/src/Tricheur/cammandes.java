@@ -28,7 +28,7 @@ public class cammandes extends Thread{
 				this.commande = this.canalLecture.readLine();
 			} catch (IOException e) { this.interrupt(); e.printStackTrace(); }
 			
-			if(this.commande!=null || !this.commande.equals("")) {  
+			if(this.commande!=null && !this.commande.equals("")) {  
  
 				 this.cmd = this.commande.split("/");
 		            

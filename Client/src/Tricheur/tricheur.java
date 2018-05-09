@@ -11,11 +11,15 @@ import java.io.PrintStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class tricheur {
 
 
     public void lanceTricheur() {
+    	
+    	Vector<String>  trajic = new Vector<>();
+    	
     	String port1 = "2018";
     	int port = 2018;
     	String ip = "127.0.0.1";
@@ -45,17 +49,24 @@ public class tricheur {
     		
     		
     	}
+
+    	trajic.add("A1");trajic.add("A2");trajic.add("A3");trajic.add("A4");
+    	trajic.add("B1");trajic.add("B2");trajic.add("B3");trajic.add("B4");
+    	trajic.add("C1");trajic.add("C2");trajic.add("C3");trajic.add("C4");
+    	trajic.add("D1");trajic.add("D2");trajic.add("D3");trajic.add("D4");
     	
     	cammandes com = new cammandes(this, canalLecture, canalEcriture);
     	com.start();
     	canalEcriture.print("CONNEXION/Tricheur/\n");canalEcriture.flush();
     	
-        System.out.println(is_exist_word("Bonjour"));System.out.println(is_exist_word("BONJOUR"));System.out.println(is_exist_word("Ss"));
-
+    	new send_messages(canalEcriture).start();
         
     }
 
 public void receveLettres(String plateux) {
+	Vector<String> mots = new Vector<>();
+	Vector<String> trajectoir = new Vector<>();
+	
 	
 	System.out.println("debut de recherche avec : "+plateux);
 }
