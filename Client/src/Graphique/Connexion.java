@@ -1,11 +1,5 @@
 package Graphique;
 
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.net.Socket;
-import java.net.UnknownHostException;
-
 import Threads.Connexion_Lab_Erreur;
 
 /**
