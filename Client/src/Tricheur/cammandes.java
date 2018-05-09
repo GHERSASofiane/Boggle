@@ -43,7 +43,15 @@ public class cammandes extends Thread{
 					case "TOUR":
 						this.tr.receveLettres(this.cmd[1]);
 						break;
-				
+
+						
+					case "MVALIDE": 
+						System.out.println("Mot valide : "+ this.cmd[1]);
+						break;
+						
+					case "MINVALIDE": 
+						System.out.println("Mot invalide !");
+						break;
 					default:
 						break;
 						

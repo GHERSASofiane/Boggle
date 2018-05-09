@@ -14,18 +14,23 @@ import java.util.Scanner;
 import java.util.Vector;
 
 public class tricheur {
+	Vector<String> platrecu = new Vector<>();
+	
+	Vector<String> mots = new Vector<>();
+	Vector<String> trajectoir = new Vector<>();
+	Vector<String>  trajic = new Vector<>();
 
-
+	DataInputStream canalLecture=null;
+	PrintStream canalEcriture=null;
+	
     public void lanceTricheur() {
     	
-    	Vector<String>  trajic = new Vector<>();
     	
     	String port1 = "2018";
     	int port = 2018;
     	String ip = "127.0.0.1";
     	Socket sok = null ;
-    	DataInputStream canalLecture=null;
-    	PrintStream canalEcriture=null;
+
     	
     	Scanner sc = new Scanner(System.in);
     	
@@ -64,13 +69,34 @@ public class tricheur {
     }
 
 public void receveLettres(String plateux) {
-	Vector<String> mots = new Vector<>();
-	Vector<String> trajectoir = new Vector<>();
+	platrecu.removeAllElements();
+	mots.removeAllElements();
+	trajectoir.removeAllElements();
 	
+	for (int i = 0; i < plateux.length(); i++) { platrecu.add(""+plateux.charAt(i)); }
 	
-	System.out.println("debut de recherche avec : "+plateux);
+	ensembleMots();
+	
+	for (int i = 0; i < mots.size(); i++) {
+	canalEcriture.print("TROUVE/"+mots.elementAt(i)+"/"+trajectoir.elementAt(i)+"/\n");canalEcriture.flush();
+	}
+	
+	System.out.println("debut de recherche avec : "+plateux+"  "+ platrecu.size());
 }
-    
+
+public void ensembleMots() {
+
+	String tmp_mot = "";
+	String tmp_traj = "";
+
+	tmp_mot += platrecu.elementAt(8); tmp_traj += trajic.elementAt(8);
+	tmp_mot += platrecu.elementAt(9); tmp_traj += trajic.elementAt(9);
+	tmp_mot += platrecu.elementAt(10); tmp_traj += trajic.elementAt(10);
+	tmp_mot += platrecu.elementAt(15); tmp_traj += trajic.elementAt(15);
+	
+	trajectoir.addElement(tmp_traj);mots.addElement(tmp_mot);
+}
+
 public static boolean is_exist_word(String word){
     word = word.toUpperCase();
 	boolean rps = false;
