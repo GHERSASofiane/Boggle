@@ -1,6 +1,6 @@
 package Tricheur;
 
-public class send_messages extends Threads{
+public class send_messages extends Thread{
 
 
 

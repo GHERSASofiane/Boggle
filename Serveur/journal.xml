@@ -1,4 +1,12 @@
-<journal>
-<session><date>8 mai 2018</date>
+<journal><session><date>9 mai 2018</date>
+<tour>
+<num_tour>1</num_tour>
+<client>
+<name>
+Tricheur</name>
+<score>
+0</score>
+</client>
+</tour>
 </session>
 </journal>
