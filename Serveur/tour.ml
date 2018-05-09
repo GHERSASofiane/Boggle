@@ -1,8 +1,7 @@
-open Connexion_manager;;
 open Global_functions;;
 open Journal;;
 
-let users = ref [];;
+
 let matrice = Array.make_matrix 4 4 "";;
 let num_tour = ref 1;;
 
@@ -23,7 +22,7 @@ let des () =
   done;;
 
 
-class tour (usrs : infos list ref) nb_tour = 
+class tour = 
 	object(self)
 	initializer 
 		self#setTirage ()
@@ -34,8 +33,7 @@ class tour (usrs : infos list ref) nb_tour =
 	val mutable tirage = matrice
 	val mutable words_found = [""]
 
-	method getClients = usrs
-	
+
 	method getDictionnaire = read_file "dictionnaire.dat"
   (*tirage : matrice 4*4 *)
   method getTirage = matrice
@@ -49,20 +47,20 @@ class tour (usrs : infos list ref) nb_tour =
 			List.map (fun x -> 
 				 let mots = ref "" and scores = ref ((string_of_int !num_tour) ^ "*") in
 					ignore(List.map (fun y -> mots := !mots ^ y.user ^ ":" ^  !(y.motsproposes) ^ ";";
-					                  scores := !scores ^ y.user ^  "*" ^ (string_of_int !(y.score) ^ "*")) !(self#getClients));
+					                  scores := !scores ^ y.user ^  "*" ^ (string_of_int !(y.score) ^ "*")) !(clients));
 						
 					let message = "BILANMOTS/" ^ !mots ^ "/" ^ !scores ^ "/\n" in							
 						output_string x.outchan message;
             flush x.outchan					
-				) !(self#getClients)
+				) !(clients)
 				) 	
 	
-	method fin_tour () =  Thread.create (fun x -> self#expiration self#getClients)() 
+	method fin_tour () =  Thread.create (fun x -> self#expiration ())() 
 	method getNumTour () = !num_tour
 	
 	(* experation de tour *)
-	method expiration clients = 
-		Thread.delay 120.0;
+	method expiration ()= 
+		Thread.delay 30.0;
 		print_endline ("fin de temps repartie pour le tour " ^ string_of_int !num_tour);
 		let message =  "RFIN/\n" in
 		let t = ref ["\n<tour>\n<num_tour>" ^ string_of_int !num_tour ^ "</num_tour>\n"] in	
@@ -93,7 +91,7 @@ class tour (usrs : infos list ref) nb_tour =
 		Thread.exit ()	
 	
 	method start_tour num = 
-		if !num_tour < nb_tour then 
+		if !num_tour < !nb_tour then 
 			begin
 				
 				print_endline ("debut de tour " ^ string_of_int num);
@@ -106,28 +104,37 @@ class tour (usrs : infos list ref) nb_tour =
     						                      fun x -> 
     						                                output_string x.outchan message;
     						                								flush x.outchan;
-    						                    ) !users)
+    						                    ) !clients)
 					end;							
 				ignore(self#fin_tour ());
 				
 			end
 			else
 				(
-					self#end_session ()
+					self#end_session ();
+					if (List.length !clients > 0) then
+						begin
+							Mutex.lock mutex_session;
+							session_fini := true;
+							num_tour := 1;
+							Condition.signal cond_session;
+							
+							Mutex.unlock mutex_session
+						end
 				)
 	(*fin d'une session *)
    method end_session () = 
-            let message =  "VAINQUEUR/" ^ (scores users) ^ "\n" in
+            let message =  "VAINQUEUR/" ^ (scores clients) ^ "\n" in
 						ignore(List.map (fun x ->  output_string x.outchan message;
     						                								flush x.outchan
-    						     ) !users)
+    						     ) !clients)
             
 						
 	method getWords = words_found
 	
 	method add_word word = 
-		Mutex.lock mutex;
+		Mutex.lock mutex_add_word;
 		words_found <- words_found@[word];
-		Mutex.unlock mutex	
+		Mutex.unlock mutex_add_word	
 
 end;;
