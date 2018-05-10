@@ -60,7 +60,12 @@ class tour =
 	
 	(* experation de tour *)
 	method expiration ()= 
-		Thread.delay 30.0;
+		
+		while !timer > 0 do
+			Thread.delay 1.0;
+			timer := !timer - 1 
+		done;
+		
 		print_endline ("fin de temps repartie pour le tour " ^ string_of_int !num_tour);
 		let message =  "RFIN/\n" in
 		let t = ref ["\n<tour>\n<num_tour>" ^ string_of_int !num_tour ^ "</num_tour>\n"] in	
@@ -95,15 +100,19 @@ class tour =
 			begin
 				
 				print_endline ("debut de tour " ^ string_of_int num);
-
+				timer := 120;
+				
 				if (!num_tour > 1) then
 					begin
     				self#setTirage ();
-    				let message = "TOUR/" ^ (array_to_string self#getTirage) ^ "/\n" in
+    				let message = "TOUR/" ^ (array_to_string self#getTirage) ^ "/\n" 
+						and time = "TIME/" ^ (string_of_int !timer) ^ "\n" in
     								ignore (List.map (
     						                      fun x -> 
     						                                output_string x.outchan message;
     						                								flush x.outchan;
+																								output_string x.outchan time;
+    						                								flush x.outchan
     						                    ) !clients)
 					end;							
 				ignore(self#fin_tour ());
