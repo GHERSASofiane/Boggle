@@ -1,4 +1,18 @@
-<journal>
-<session><date>9 mai 2018</date>
+<journal><session><date>10 mai 2018</date><tour><num_tour>1</num_tour><client><name>Your UserName</name><score>0</score></client><client><name>Tricheur</name><score>20</score></client></tour><tour><num_tour>2</num_tour><client><name>Your UserName</name><score>0</score></client><client><name>Tricheur</name><score>20</score></client></tour><tour><num_tour>3</num_tour><client><name>Your UserName</name><score>0</score></client><client><name>Tricheur</name><score>47</score></client></tour>
+<tour>
+<num_tour>4</num_tour>
+<client>
+<name>
+Your UserName</name>
+<score>
+0</score>
+</client>
+<client>
+<name>
+Tricheur</name>
+<score>
+69</score>
+</client>
+</tour>
 </session>
 </journal>

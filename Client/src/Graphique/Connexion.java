@@ -12,9 +12,7 @@ import Threads.Connexion_Lab_Erreur;
  */
 public class Connexion extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Int_Connexion
-     */
+ 
     public Connexion() {
         initComponents();
     }

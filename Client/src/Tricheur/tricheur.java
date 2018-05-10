@@ -14,10 +14,11 @@ import java.util.Scanner;
 import java.util.Vector;
 
 public class tricheur {
+
+	boolean conex = true;
+	Combinaison myTrich;
 	Vector<String> platrecu = new Vector<>();
 	
-	Vector<String> mots = new Vector<>();
-	Vector<String> trajectoir = new Vector<>();
 	Vector<String>  trajic = new Vector<>();
 
 	DataInputStream canalLecture=null;
@@ -68,54 +69,21 @@ public class tricheur {
         
     }
 
+//    a chaque recu de nouveux pla
 public void receveLettres(String plateux) {
-	platrecu.removeAllElements();
-	mots.removeAllElements();
-	trajectoir.removeAllElements();
-	
-	for (int i = 0; i < plateux.length(); i++) { platrecu.add(""+plateux.charAt(i)); }
-	
-	ensembleMots();
-	
-	for (int i = 0; i < mots.size(); i++) {
-	canalEcriture.print("TROUVE/"+mots.elementAt(i)+"/"+trajectoir.elementAt(i)+"/\n");canalEcriture.flush();
+	if(!conex) {
+		myTrich.stop();
 	}
 	
-	System.out.println("debut de recherche avec : "+plateux+"  "+ platrecu.size());
-}
-
-public void ensembleMots() {
-
-	String tmp_mot = "";
-	String tmp_traj = "";
-
-	tmp_mot += platrecu.elementAt(8); tmp_traj += trajic.elementAt(8);
-	tmp_mot += platrecu.elementAt(9); tmp_traj += trajic.elementAt(9);
-	tmp_mot += platrecu.elementAt(10); tmp_traj += trajic.elementAt(10);
-	tmp_mot += platrecu.elementAt(15); tmp_traj += trajic.elementAt(15);
+	conex = false;
+	platrecu = new Vector<>();
 	
-	trajectoir.addElement(tmp_traj);mots.addElement(tmp_mot);
+	for (int i = 0; i < plateux.length(); i++) { platrecu.add(""+plateux.charAt(i)); }
+	 
+	myTrich = new Combinaison(canalEcriture, platrecu, trajic);
+	myTrich.start();
+ 
 }
 
-public static boolean is_exist_word(String word){
-    word = word.toUpperCase();
-	boolean rps = false;
-		File dataFile = new File("src/Tricheur/Dictionnaire/"+word.charAt(0)+"_dico.txt");
-		   	try {
-		   	InputStream ips = new FileInputStream(dataFile);
-		   	InputStreamReader ipsr = new InputStreamReader(ips);
-		   	BufferedReader br = new BufferedReader(ipsr);
-		   	String ligne;
-		   	while ((ligne = br.readLine()) != null) {
-		   		 
-		   		if (word.equals(ligne)) {
-					rps = true;
-				}
-		   	}
-		   	
-		   	br.close();
-		   	} catch (Exception e) { System.out.println(e.toString()); }
-return rps;
-}
 
 }

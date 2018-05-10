@@ -97,9 +97,14 @@ public class Gestion_Commandes extends Thread{
 			case "PRECEPTION": 
 				this.jeux.AddMessage(this.cmd[2], this.cmd[1]);
 				break;
-				
+
 			case "USERS": 
 				this.jeux.AddUSERS(this.cmd[1]);
+				break;
+
+			case "TIME": 
+				int tmp = Integer.parseInt(this.cmd[1]);
+				new Gestion_Time(this.jeux.I_in_time, tmp).start();
 				break;
 				
 			case "ERREUR": 
