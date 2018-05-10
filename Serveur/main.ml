@@ -1,5 +1,8 @@
+open Global_functions;;
 open Server_manager;;
 open Journal;;
+
+
 (*
    val main : unit -> unit
    *)
@@ -11,10 +14,10 @@ open Journal;;
 		(* &&  Sys.argv.(5) = "-grilles" *)
 		  then
 			let port = int_of_string(Sys.argv.(2)) 
-			and nbtour = int_of_string(Sys.argv.(4))
 			in
+				nb_tour := int_of_string(Sys.argv.(4));
 				open_journal ();
-				(new server_maj port nbtour)#start()
+				(new server_maj port nb_tour)#start()
 		else
 			print_endline "usage : server -port port -tours nbtour";;
    

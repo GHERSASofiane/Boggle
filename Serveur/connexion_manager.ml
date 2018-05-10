@@ -5,6 +5,7 @@ exception Fin ;;
 let mutex = Mutex.create ();;
 
 
+
 (* verifier la trajectoire *)
 let verif_traj traj = 
   
@@ -90,7 +91,7 @@ inherit connexion sd sa b tour
     val score = ref 0
     val inchan = Unix.in_channel_of_descr sd
     val out_chan = Unix.out_channel_of_descr sd
-		val clients = tour#getClients
+		
 		val tirage = tour#getTirage
 		val dictionnaire = tour#getDictionnaire
 
@@ -136,6 +137,13 @@ method signal_connexion client =
     										List.map (fun x -> users := !users ^ x.user ^ "*") !clients;
     										output_string out_chan (!users ^ "/\n");
                         flush out_chan;
+								end;
+								
+								if (List.length !clients = 0) then
+								begin
+								Mutex.lock mutex_session;
+								Condition.signal cond_session;
+								Mutex.unlock mutex_session
 								end;
 								
 								Mutex.lock mutex;
@@ -249,7 +257,7 @@ method signal_connexion client =
         "CONNEXION" ->  
                        if (List.length !clients = 0) then 
 												begin
-													ignore (Thread.create (fun x -> tour#start_tour 1)());
+											(*		ignore (Thread.create (fun x -> tour#start_tour 1)()); *)
 													self#start_session ()
 												end;
 												

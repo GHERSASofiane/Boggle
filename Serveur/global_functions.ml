@@ -1,6 +1,12 @@
-
-
 type infos = {user : string; socket : Unix.file_descr; motsproposes: string ref;  score : int ref; outchan : out_channel };;
+
+let mutex_session = Mutex.create ();;
+let mutex_add_word = Mutex.create ();;
+let cond_session = Condition.create ();;
+let (clients : infos list ref) = ref [];;
+let nb_tour = ref 0;;
+let session_fini = ref false;;
+
 
 (*lire le dictionnaire dans une liste*)
 let read_file filename = 

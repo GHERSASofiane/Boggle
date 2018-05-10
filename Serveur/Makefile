@@ -1,6 +1,6 @@
 #export OCAMLPARAM="safe-string=0,_"
 
-SOURCES = global_functions.ml journal.ml connexion.ml connexion_manager.ml tour.ml server.ml server_manager.ml main.ml
+SOURCES = global_functions.ml journal.ml tour.ml session.ml connexion.ml connexion_manager.ml  server.ml server_manager.ml main.ml
 
 EXEC = a.out
 
