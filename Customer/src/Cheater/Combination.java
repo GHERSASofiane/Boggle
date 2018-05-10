@@ -101,7 +101,7 @@ public void AddNewMotTrouve(Vector<String> mot, Vector<String> taj) {
 		trajcom += taj.elementAt(i);
 	}
 	if(is_exist_word(motcom)) {
-		System.out.println(motcom+" :: "+trajcom);
+		 
 		mots.addElement(motcom);
 		trajectoir.addElement(trajcom);
 		canalEcriture.print("TROUVE/"+motcom+"/"+trajcom+"/\n");canalEcriture.flush();
@@ -113,7 +113,7 @@ public void AddNewMotTrouve(Vector<String> mot, Vector<String> taj) {
 public static boolean is_exist_word(String word){
     word = word.toUpperCase();
 	boolean rps = false;
-		File dataFile = new File("src/Tricheur/Dictionnaire/"+word.charAt(0)+"_dico.txt");
+		File dataFile = new File("src/Cheater/Dictionnaire/"+word.charAt(0)+"_dico.txt");
 		   	try {
 		   	InputStream ips = new FileInputStream(dataFile);
 		   	InputStreamReader ipsr = new InputStreamReader(ips);
