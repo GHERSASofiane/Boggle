@@ -27,13 +27,13 @@ let rec write_to_file oc = function
 	;;
  
 let write_list_to_file l = 
-	let jrnl =  open_out "journal.xml" in
+	let jrnl =  open_out "../WebSite/journal.xml" in
 		write_to_file jrnl l;
 		close_out jrnl;;
 
 
 let open_journal () = 	
-	let j = ref (read_file "journal.xml") and date = Unix.gmtime(Unix.time ()) in
+	let j = ref (read_file "../WebSite/journal.xml") and date = Unix.gmtime(Unix.time ()) in
 		 let session = ["<session><date>" ^ date_string_of_tm date]@["</date>\n"]@["</session>\n"] in
       	j := ["<journal>"]@["\n"]@session@["</journal>"];
 		write_list_to_file !j;;
