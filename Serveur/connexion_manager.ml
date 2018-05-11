@@ -298,7 +298,6 @@ method signal_connexion client =
 				| "PENVOI" -> self#send_message_to (List.nth message 1) (List.nth message 2)
 				| "GET " -> let file = (List.nth (String.split_on_char ' ' (List.nth message 1)) 0) in
 				            self#send_journal file
-														
         | _ -> let message = "Commande Invalide\n" in
                 	output_string out_chan message;
             			flush out_chan
