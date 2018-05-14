@@ -1,0 +1,43 @@
+<journal>
+	<session>
+		<date>10 mai 2018</date>
+		<tour>
+			<num_tour>1</num_tour>
+			<client>
+				<name>Tricheur</name>
+				<score>16</score>
+			</client>
+			<client>
+				<name>GHERSA</name>
+				<score>0</score>
+			</client>
+		</tour>
+		<tour>
+			<num_tour>3</num_tour>
+			<client>
+				<name>
+					Tricheur
+				</name>
+				<score>
+					240
+				</score>
+			</client>
+			<client>
+				<name>
+					GHERSA
+				</name>
+				<score>
+					1
+				</score>
+			</client>
+			<client>
+				<name>
+					Naim
+				</name>
+				<score>
+					1
+				</score>
+			</client>
+		</tour>
+	</session>
+</journal>

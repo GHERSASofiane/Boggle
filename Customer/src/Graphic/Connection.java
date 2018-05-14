@@ -1,21 +1,19 @@
-package Graphique;
+package Graphic;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import Threads.Connexion_Lab_Erreur;
+import Threads.ErrorDisplay;
 
 /**
  *
  * @author ghersa
  */
-public class Connexion extends javax.swing.JFrame {
+public class Connection extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Int_Connexion
-     */
-    public Connexion() {
+ 
+    public Connection() {
         initComponents();
     }
                          
@@ -160,13 +158,13 @@ public class Connexion extends javax.swing.JFrame {
 		String tmp_user = this.inp_username.getText();
 		
     	if(tmp_ip.equals("") | this.inp_port.getText().equals("") | tmp_user.equals("") ) {
-    		new Connexion_Lab_Erreur(this.I_erreur, "The IP address And Port And UserName must not be empty").start();
+    		new ErrorDisplay(this.I_erreur, "The IP address And Port And UserName must not be empty").start();
     	}else { 
     		
     		try {
 				s = new Socket( tmp_ip, tmp_port ); 
 			} catch (IOException e) {
-				new Connexion_Lab_Erreur(this.I_erreur, "Connection error").start();
+				new ErrorDisplay(this.I_erreur, "Connection error").start();
 			}
     
     		if(s!=null) {
@@ -185,15 +183,15 @@ public class Connexion extends javax.swing.JFrame {
     			// }
     			 cmd = tmp.split("/");
     			 if(cmd[0].equals("ERREUR")) {
-    				 new Connexion_Lab_Erreur(this.I_erreur, "User Exists").start();
+    				 new ErrorDisplay(this.I_erreur, "User Exists").start();
     			 }else {
-       	          Jeux j = new Jeux( tmp_user, s);
+       	          Games j = new Games( tmp_user, s);
        	          j.setVisible(true);
        	          this.setVisible(false); 
     			 }
     			
     		}else {
-    			new Connexion_Lab_Erreur(this.I_erreur, "Connection error").start();
+    			new ErrorDisplay(this.I_erreur, "Connection error").start();
     		}
 
 		}
@@ -213,18 +211,18 @@ public class Connexion extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Connexion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Connection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Connexion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Connection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Connexion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Connection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Connexion.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Connection.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
   
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Connexion().setVisible(true);
+                new Connection().setVisible(true);
             }
         });
     }

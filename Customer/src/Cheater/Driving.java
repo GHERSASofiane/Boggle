@@ -1,20 +1,18 @@
-package Tricheur;
+package Cheater;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 
-import Threads.Jeux_Lab_Messages;
+public class Driving extends Thread{
 
-public class cammandes extends Thread{
-
-	private tricheur tr=null;
+	private Cheater tr=null;
 	private DataInputStream canalLecture=null;
 	private PrintStream canalEcriture=null;
 	private String commande = "";
 	private String[] cmd;
 	
-	public cammandes(tricheur t, DataInputStream l, PrintStream e) {
+	public Driving(Cheater t, DataInputStream l, PrintStream e) {
 		this.tr = t;
 		this.canalLecture = l;
 		this.canalEcriture = e;
@@ -43,15 +41,7 @@ public class cammandes extends Thread{
 					case "TOUR":
 						this.tr.receveLettres(this.cmd[1]);
 						break;
-
 						
-					case "MVALIDE": 
-						System.out.println("Mot valide : "+ this.cmd[1]);
-						break;
-						
-					case "MINVALIDE": 
-						System.out.println("Mot invalide !");
-						break;
 					default:
 						break;
 						

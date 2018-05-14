@@ -1,13 +1,13 @@
-package Tricheur;
+package Cheater;
 
 import java.io.PrintStream;
 import java.util.Vector;
 
-public class send_messages extends Thread{
+public class SendingMessages extends Thread{
 	private Vector<String> messages = new Vector<>();
 	private PrintStream canalEcriture=null;
 
-	public send_messages( PrintStream e) {
+	public SendingMessages( PrintStream e) {
 		this.canalEcriture = e;
 	}
 	
@@ -21,7 +21,7 @@ public class send_messages extends Thread{
 			this.canalEcriture.print("ENVOI/"+this.messages.get(ind)+"/\n");
 			this.canalEcriture.flush();
 			
-			try { sleep(3000); } catch (InterruptedException e) { this.interrupt();}
+			try { sleep(4000); } catch (InterruptedException e) { this.interrupt();}
 		}
 	}
 
@@ -31,7 +31,7 @@ public class send_messages extends Thread{
 		this.messages.addElement("chez nous il fais beux ;))");
 		this.messages.addElement("qui veux rester en contact avec moi ?");
 		this.messages.addElement("je suis votre CHEF ;) ");
-		this.messages.addElement("qi veux suivre des cours avec moi ? ");
+		this.messages.addElement("qui veux suivre des cours avec moi ? ");
 		this.messages.addElement("Hy Hyyy");
 	}
 	

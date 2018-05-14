@@ -1,4 +1,4 @@
-package Tricheur;
+package Cheater;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
@@ -13,11 +13,12 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 import java.util.Vector;
 
-public class tricheur {
+public class Cheater {
+
+	boolean conex = true;
+	Combination myTrich;
 	Vector<String> platrecu = new Vector<>();
 	
-	Vector<String> mots = new Vector<>();
-	Vector<String> trajectoir = new Vector<>();
 	Vector<String>  trajic = new Vector<>();
 
 	DataInputStream canalLecture=null;
@@ -36,9 +37,9 @@ public class tricheur {
     	
     	System.out.println("Bienvenue sur le client tricheur ;) ");
     	System.out.println("Donner l'adresse IP de serveur ");
-//    	ip = sc.nextLine();
+    	ip = sc.nextLine();
     	System.out.println("Donner le PORT de serveur ");
-//    	port1 = sc.nextLine();
+    	port1 = sc.nextLine();
     	port = Integer.parseInt(port1);
     	
     	try {
@@ -60,62 +61,29 @@ public class tricheur {
     	trajic.add("C1");trajic.add("C2");trajic.add("C3");trajic.add("C4");
     	trajic.add("D1");trajic.add("D2");trajic.add("D3");trajic.add("D4");
     	
-    	cammandes com = new cammandes(this, canalLecture, canalEcriture);
+    	Driving com = new Driving(this, canalLecture, canalEcriture);
     	com.start();
     	canalEcriture.print("CONNEXION/Tricheur/\n");canalEcriture.flush();
     	
-    	new send_messages(canalEcriture).start();
+    	new SendingMessages(canalEcriture).start();
         
     }
 
+//    a chaque recu de nouveux pla
 public void receveLettres(String plateux) {
-	platrecu.removeAllElements();
-	mots.removeAllElements();
-	trajectoir.removeAllElements();
-	
-	for (int i = 0; i < plateux.length(); i++) { platrecu.add(""+plateux.charAt(i)); }
-	
-	ensembleMots();
-	
-	for (int i = 0; i < mots.size(); i++) {
-	canalEcriture.print("TROUVE/"+mots.elementAt(i)+"/"+trajectoir.elementAt(i)+"/\n");canalEcriture.flush();
+	if(!conex) {
+		myTrich.stop();
 	}
 	
-	System.out.println("debut de recherche avec : "+plateux+"  "+ platrecu.size());
-}
-
-public void ensembleMots() {
-
-	String tmp_mot = "";
-	String tmp_traj = "";
-
-	tmp_mot += platrecu.elementAt(8); tmp_traj += trajic.elementAt(8);
-	tmp_mot += platrecu.elementAt(9); tmp_traj += trajic.elementAt(9);
-	tmp_mot += platrecu.elementAt(10); tmp_traj += trajic.elementAt(10);
-	tmp_mot += platrecu.elementAt(15); tmp_traj += trajic.elementAt(15);
+	conex = false;
+	platrecu = new Vector<>();
 	
-	trajectoir.addElement(tmp_traj);mots.addElement(tmp_mot);
+	for (int i = 0; i < plateux.length(); i++) { platrecu.add(""+plateux.charAt(i)); }
+	 
+	myTrich = new Combination(canalEcriture, platrecu, trajic);
+	myTrich.start();
+ 
 }
 
-public static boolean is_exist_word(String word){
-    word = word.toUpperCase();
-	boolean rps = false;
-		File dataFile = new File("src/Tricheur/Dictionnaire/"+word.charAt(0)+"_dico.txt");
-		   	try {
-		   	InputStream ips = new FileInputStream(dataFile);
-		   	InputStreamReader ipsr = new InputStreamReader(ips);
-		   	BufferedReader br = new BufferedReader(ipsr);
-		   	String ligne;
-		   	while ((ligne = br.readLine()) != null) {
-		   		 
-		   		if (word.equals(ligne)) {
-					rps = true;
-				}
-		   	}
-		   	
-		   	br.close();
-		   	} catch (Exception e) { System.out.println(e.toString()); }
-return rps;
-}
 
 }

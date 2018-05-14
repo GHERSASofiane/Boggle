@@ -1,11 +1,11 @@
 package Threads;
 
-public class Jeux_Lab_Messages extends Thread{
-	
+public class ErrorDisplay extends Thread{
+
 	private javax.swing.JLabel I_erreur;
 	private String message;
 	
-	public Jeux_Lab_Messages(javax.swing.JLabel I, String m) {
+	public ErrorDisplay(javax.swing.JLabel I, String m) {
 		this.I_erreur = I;
 		this.message = m;
 	}
@@ -18,4 +18,5 @@ public class Jeux_Lab_Messages extends Thread{
 		 this.I_erreur.setText("");
 		 
 	}
+	
 }

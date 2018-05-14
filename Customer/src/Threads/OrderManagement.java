@@ -5,18 +5,18 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.Socket;
 
-import Graphique.Jeux;
+import Graphic.Games;
 
-public class Gestion_Commandes extends Thread{
+public class OrderManagement extends Thread{
 
-	private Jeux jeux = null;
+	private Games jeux = null;
 	private Socket socket = null;
 	private DataInputStream canalLecture = null;
 	private PrintStream canalEcriture = null;
 	private String commande = "";
 	private String[] cmd;
 	
-	public Gestion_Commandes(Jeux j) {
+	public OrderManagement(Games j) {
 		this.jeux = j;
 		this.socket = this.jeux.getSocket();
         try {
@@ -50,21 +50,21 @@ public class Gestion_Commandes extends Thread{
 				
 			case "CONNECTE":
 				this.jeux.AddUser(this.cmd[1]);
-				new Jeux_Lab_Messages(this.jeux.I_out_message, "New connection of "+this.cmd[1]).start();
+				new ErrorDisplay(this.jeux.I_out_message, "New connection of "+this.cmd[1]).start();
 				break;
 
 			case "DECONNEXION": 
 				this.jeux.RemoveUser(this.cmd[1]);
-				new Jeux_Lab_Messages(this.jeux.I_out_message, this.cmd[1]+" is offline ").start();
+				new ErrorDisplay(this.jeux.I_out_message, this.cmd[1]+" is offline ").start();
 				break;
 
 			case "SESSION": 
-				new Jeux_Lab_Messages(this.jeux.I_out_message, "New Session").start();
+				new ErrorDisplay(this.jeux.I_out_message, "New Session").start();
 				this.jeux.NewSession();
 				break;
 
 			case "VAINQUEUR": 
-				new Jeux_Lab_Messages(this.jeux.I_out_message, "End of Session").start();
+				new ErrorDisplay(this.jeux.I_out_message, "End of Session").start();
 				String bilan = this.cmd[1]; 
 				this.jeux.NewResults(bilan);
 				break;
@@ -78,12 +78,12 @@ public class Gestion_Commandes extends Thread{
 				break;
 				
 			case "MINVALIDE": 
-				new Jeux_Lab_Messages(this.jeux.I_out_message, this.cmd[1]).start();
+				new ErrorDisplay(this.jeux.I_out_message, this.cmd[1]).start();
 				this.jeux.InValidationMot();
 				break;
 				
 			case "RFIN": 
-				new Jeux_Lab_Messages(this.jeux.I_out_message, "Expiry of the time limit for reflection.").start();
+				new ErrorDisplay(this.jeux.I_out_message, "Expiry of the time limit for reflection.").start();
 				break;
 				
 			case "BILANMOTS": 
@@ -97,15 +97,20 @@ public class Gestion_Commandes extends Thread{
 			case "PRECEPTION": 
 				this.jeux.AddMessage(this.cmd[2], this.cmd[1]);
 				break;
-				
+
 			case "USERS": 
 				this.jeux.AddUSERS(this.cmd[1]);
+				break;
+
+			case "TIME": 
+				int tmp = Integer.parseInt(this.cmd[1]);
+				new TimeManagement(this.jeux.I_in_time, tmp).start();
 				break;
 				
 			case "ERREUR": 
 				switch (this.cmd[1]) {
 				case "userExist":
-					new Jeux_Lab_Messages(this.jeux.I_out_message, "User existe.").start();
+					new ErrorDisplay(this.jeux.I_out_message, "User existe.").start();
 					this.jeux.closeF();
 					break;
 

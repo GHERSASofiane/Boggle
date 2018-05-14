@@ -1,9 +1,9 @@
-package Tricheur;
+package Cheater;
 
-public class lance {
+public class Launch {
 
 	public static void main(String[] args) {
-		tricheur tr = new tricheur();
+		Cheater tr = new Cheater();
 		tr.lanceTricheur();
 
 	}
